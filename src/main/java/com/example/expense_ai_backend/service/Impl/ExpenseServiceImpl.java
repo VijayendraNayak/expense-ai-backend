@@ -1,8 +1,10 @@
 package com.example.expense_ai_backend.service.Impl;
 
+import com.example.expense_ai_backend.constant.AppConstant;
 import com.example.expense_ai_backend.dto.CreateExpenseRequestDTO;
 import com.example.expense_ai_backend.dto.ExpenseResponseDTO;
 import com.example.expense_ai_backend.dto.UpdateExpenseRequestDTO;
+import com.example.expense_ai_backend.exception.ResourceNotFoundException;
 import com.example.expense_ai_backend.model.Expense;
 import com.example.expense_ai_backend.repository.ExpenseRepository;
 import com.example.expense_ai_backend.service.ExpenseService;
@@ -28,10 +30,10 @@ public class ExpenseServiceImpl implements ExpenseService {
         expense.setAmount(createExpenseRequestDTO.getAmount());
         expense.setCategory(createExpenseRequestDTO.getCategory());
         expense.setDate(LocalDateTime.now());
-        expense.setUserId("default-user"); // You can modify this to get from context/auth
+        expense.setUserId(AppConstant.DEFAULT_USER);
 
         Expense savedExpense = expenseRepository.save(expense);
-        return "Expense created successfully with ID: " + savedExpense.getId();
+        return AppConstant.EXPENSE_CREATED + savedExpense.getId();
     }
 
     @Override
@@ -45,7 +47,7 @@ public class ExpenseServiceImpl implements ExpenseService {
     @Override
     public ExpenseResponseDTO getExpenseById(Long id) {
         Expense expense = expenseRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Expense not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException(AppConstant.EXPENSE_NOT_FOUND + id));
         return convertToDTO(expense);
     }
 
@@ -68,23 +70,23 @@ public class ExpenseServiceImpl implements ExpenseService {
     @Override
     public String updateExpense(Long id, UpdateExpenseRequestDTO updateExpenseRequestDTO) {
         Expense expense = expenseRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Expense not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException(AppConstant.EXPENSE_NOT_FOUND + id));
 
         expense.setDescription(updateExpenseRequestDTO.getDescription());
         expense.setAmount(updateExpenseRequestDTO.getAmount());
         expense.setCategory(updateExpenseRequestDTO.getCategory());
 
         expenseRepository.save(expense);
-        return "Expense updated successfully with ID: " + id;
+        return AppConstant.EXPENSE_UPDATED + id;
     }
 
     @Override
     public String deleteExpense(Long id) {
         if (!expenseRepository.existsById(id)) {
-            throw new RuntimeException("Expense not found with id: " + id);
+            throw new ResourceNotFoundException(AppConstant.EXPENSE_NOT_FOUND + id);
         }
         expenseRepository.deleteById(id);
-        return "Expense deleted successfully with ID: " + id;
+        return AppConstant.EXPENSE_DELETED + id;
     }
 
     @Override
@@ -106,4 +108,3 @@ public class ExpenseServiceImpl implements ExpenseService {
         );
     }
 }
-

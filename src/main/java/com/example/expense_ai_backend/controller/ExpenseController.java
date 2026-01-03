@@ -36,7 +36,7 @@ public class ExpenseController {
             @RequestBody @Valid @NotNull CreateExpenseRequestDTO createExpenseRequestDTO){
 
         String message = expenseService.createExpense(createExpenseRequestDTO);
-        Map<String,String> responseBody = Collections.singletonMap("message", message);
+        Map<String,String> responseBody = Collections.singletonMap(AppConstant.MESSAGE_KEY, message);
         return new ResponseEntity<>(responseBody, HttpStatus.CREATED);
     }
 
@@ -54,7 +54,7 @@ public class ExpenseController {
      * Get expense by ID
      * GET /api/expense/{id}
      */
-    @GetMapping("/{id}")
+    @GetMapping(AppConstant.EXPENSE_BY_ID)
     public ResponseEntity<ExpenseResponseDTO> getExpenseById(@PathVariable @NotNull Long id){
         ExpenseResponseDTO expense = expenseService.getExpenseById(id);
         return new ResponseEntity<>(expense, HttpStatus.OK);
@@ -64,7 +64,7 @@ public class ExpenseController {
      * Get expenses by user ID
      * GET /api/expense/user/{userId}
      */
-    @GetMapping("/user/{userId}")
+    @GetMapping(AppConstant.EXPENSE_BY_USER)
     public ResponseEntity<List<ExpenseResponseDTO>> getExpensesByUserId(
             @PathVariable @NotNull String userId){
         List<ExpenseResponseDTO> expenses = expenseService.getExpensesByUserId(userId);
@@ -75,7 +75,7 @@ public class ExpenseController {
      * Get expenses by category
      * GET /api/expense/category/{category}
      */
-    @GetMapping("/category/{category}")
+    @GetMapping(AppConstant.EXPENSE_BY_CATEGORY)
     public ResponseEntity<List<ExpenseResponseDTO>> getExpensesByCategory(
             @PathVariable @NotNull String category){
         List<ExpenseResponseDTO> expenses = expenseService.getExpensesByCategory(category);
@@ -86,13 +86,13 @@ public class ExpenseController {
      * Update an expense
      * PUT /api/expense/{id}
      */
-    @PutMapping("/{id}")
+    @PutMapping(AppConstant.EXPENSE_BY_ID)
     public ResponseEntity<Map<String,String>> updateExpense(
             @PathVariable @NotNull Long id,
             @RequestBody @Valid @NotNull UpdateExpenseRequestDTO updateExpenseRequestDTO){
 
         String message = expenseService.updateExpense(id, updateExpenseRequestDTO);
-        Map<String,String> responseBody = Collections.singletonMap("message", message);
+        Map<String,String> responseBody = Collections.singletonMap(AppConstant.MESSAGE_KEY, message);
         return new ResponseEntity<>(responseBody, HttpStatus.OK);
     }
 
@@ -100,10 +100,10 @@ public class ExpenseController {
      * Delete an expense
      * DELETE /api/expense/{id}
      */
-    @DeleteMapping("/{id}")
+    @DeleteMapping(AppConstant.EXPENSE_BY_ID)
     public ResponseEntity<Map<String,String>> deleteExpense(@PathVariable @NotNull Long id){
         String message = expenseService.deleteExpense(id);
-        Map<String,String> responseBody = Collections.singletonMap("message", message);
+        Map<String,String> responseBody = Collections.singletonMap(AppConstant.MESSAGE_KEY, message);
         return new ResponseEntity<>(responseBody, HttpStatus.OK);
     }
 
@@ -111,10 +111,10 @@ public class ExpenseController {
      * Get total expense count
      * GET /api/expense/count
      */
-    @GetMapping("/count")
+    @GetMapping(AppConstant.EXPENSE_COUNT)
     public ResponseEntity<Map<String,Long>> getTotalExpenseCount(){
         long count = expenseService.getTotalExpenseCount();
-        Map<String,Long> responseBody = Collections.singletonMap("count", count);
+        Map<String,Long> responseBody = Collections.singletonMap(AppConstant.COUNT_KEY, count);
         return new ResponseEntity<>(responseBody, HttpStatus.OK);
     }
 }
