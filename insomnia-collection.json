@@ -1,0 +1,310 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2026-01-03T00:00:00.000Z",
+  "__export_source": "insomnia.desktop.app:v2023.5.0",
+  "resources": [
+    {
+      "_id": "wrk_expense_api",
+      "_type": "workspace",
+      "name": "Expense AI Backend",
+      "description": "API Testing for Expense Tracker with In-Memory Storage"
+    },
+    {
+      "_id": "env_base",
+      "_type": "environment",
+      "name": "Base Environment",
+      "data": {
+        "base_url": "http://localhost:8061",
+        "api_path": "/api/expense"
+      }
+    },
+    {
+      "_id": "req_create_expense",
+      "_type": "request",
+      "parentId": "wrk_expense_api",
+      "name": "1. Create Expense",
+      "method": "POST",
+      "url": "{{ _.base_url }}{{ _.api_path }}",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"description\": \"Coffee at Starbucks\",\n  \"amount\": 5.50,\n  \"category\": \"Food & Beverage\"\n}"
+      },
+      "description": "Creates a new expense. Returns 201 CREATED on success."
+    },
+    {
+      "_id": "req_create_expense_invalid",
+      "_type": "request",
+      "parentId": "wrk_expense_api",
+      "name": "1a. Create Expense (Invalid - Negative Amount)",
+      "method": "POST",
+      "url": "{{ _.base_url }}{{ _.api_path }}",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"description\": \"Test Expense\",\n  \"amount\": -10.00,\n  \"category\": \"Test\"\n}"
+      },
+      "description": "Tests validation - should return 400 BAD REQUEST"
+    },
+    {
+      "_id": "req_create_expense_empty",
+      "_type": "request",
+      "parentId": "wrk_expense_api",
+      "name": "1b. Create Expense (Invalid - Empty Fields)",
+      "method": "POST",
+      "url": "{{ _.base_url }}{{ _.api_path }}",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"description\": \"\",\n  \"amount\": null,\n  \"category\": \"\"\n}"
+      },
+      "description": "Tests validation - should return 400 BAD REQUEST with multiple field errors"
+    },
+    {
+      "_id": "req_get_all",
+      "_type": "request",
+      "parentId": "wrk_expense_api",
+      "name": "2. Get All Expenses",
+      "method": "GET",
+      "url": "{{ _.base_url }}{{ _.api_path }}",
+      "description": "Retrieves all expenses. Returns 200 OK with array of expenses."
+    },
+    {
+      "_id": "req_get_by_id",
+      "_type": "request",
+      "parentId": "wrk_expense_api",
+      "name": "3. Get Expense by ID",
+      "method": "GET",
+      "url": "{{ _.base_url }}{{ _.api_path }}/1",
+      "description": "Retrieves a specific expense by ID. Returns 200 OK or 404 NOT FOUND."
+    },
+    {
+      "_id": "req_get_by_id_notfound",
+      "_type": "request",
+      "parentId": "wrk_expense_api",
+      "name": "3a. Get Expense by ID (Not Found)",
+      "method": "GET",
+      "url": "{{ _.base_url }}{{ _.api_path }}/999",
+      "description": "Tests 404 error - expense with ID 999 should not exist"
+    },
+    {
+      "_id": "req_get_by_user",
+      "_type": "request",
+      "parentId": "wrk_expense_api",
+      "name": "4. Get Expenses by User",
+      "method": "GET",
+      "url": "{{ _.base_url }}{{ _.api_path }}/user/default-user",
+      "description": "Retrieves all expenses for a specific user. Returns 200 OK."
+    },
+    {
+      "_id": "req_get_by_category_food",
+      "_type": "request",
+      "parentId": "wrk_expense_api",
+      "name": "5. Get Expenses by Category (Food)",
+      "method": "GET",
+      "url": "{{ _.base_url }}{{ _.api_path }}/category/Food & Beverage",
+      "description": "Retrieves all expenses in 'Food & Beverage' category. Returns 200 OK."
+    },
+    {
+      "_id": "req_get_by_category_transport",
+      "_type": "request",
+      "parentId": "wrk_expense_api",
+      "name": "5a. Get Expenses by Category (Transportation)",
+      "method": "GET",
+      "url": "{{ _.base_url }}{{ _.api_path }}/category/Transportation",
+      "description": "Retrieves all expenses in 'Transportation' category. Returns 200 OK."
+    },
+    {
+      "_id": "req_update_expense",
+      "_type": "request",
+      "parentId": "wrk_expense_api",
+      "name": "6. Update Expense",
+      "method": "PUT",
+      "url": "{{ _.base_url }}{{ _.api_path }}/1",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"description\": \"Coffee at Starbucks (Updated)\",\n  \"amount\": 6.50,\n  \"category\": \"Food & Beverage\"\n}"
+      },
+      "description": "Updates an existing expense. Returns 200 OK or 404 NOT FOUND."
+    },
+    {
+      "_id": "req_update_expense_notfound",
+      "_type": "request",
+      "parentId": "wrk_expense_api",
+      "name": "6a. Update Expense (Not Found)",
+      "method": "PUT",
+      "url": "{{ _.base_url }}{{ _.api_path }}/999",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"description\": \"Updated Expense\",\n  \"amount\": 10.00,\n  \"category\": \"Test\"\n}"
+      },
+      "description": "Tests 404 error - expense with ID 999 should not exist"
+    },
+    {
+      "_id": "req_update_expense_invalid",
+      "_type": "request",
+      "parentId": "wrk_expense_api",
+      "name": "6b. Update Expense (Invalid Data)",
+      "method": "PUT",
+      "url": "{{ _.base_url }}{{ _.api_path }}/1",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"description\": \"\",\n  \"amount\": -5.00,\n  \"category\": \"\"\n}"
+      },
+      "description": "Tests validation - should return 400 BAD REQUEST"
+    },
+    {
+      "_id": "req_delete_expense",
+      "_type": "request",
+      "parentId": "wrk_expense_api",
+      "name": "7. Delete Expense",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}{{ _.api_path }}/1",
+      "description": "Deletes an expense. Returns 200 OK or 404 NOT FOUND."
+    },
+    {
+      "_id": "req_delete_expense_notfound",
+      "_type": "request",
+      "parentId": "wrk_expense_api",
+      "name": "7a. Delete Expense (Not Found)",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}{{ _.api_path }}/999",
+      "description": "Tests 404 error - expense with ID 999 should not exist"
+    },
+    {
+      "_id": "req_get_count",
+      "_type": "request",
+      "parentId": "wrk_expense_api",
+      "name": "8. Get Expense Count",
+      "method": "GET",
+      "url": "{{ _.base_url }}{{ _.api_path }}/count",
+      "description": "Returns total count of expenses. Returns 200 OK."
+    },
+    {
+      "_id": "req_create_batch_1",
+      "_type": "request",
+      "parentId": "wrk_expense_api",
+      "name": "9a. Batch Create - Coffee",
+      "method": "POST",
+      "url": "{{ _.base_url }}{{ _.api_path }}",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"description\": \"Morning coffee\",\n  \"amount\": 4.50,\n  \"category\": \"Food & Beverage\"\n}"
+      },
+      "description": "Create multiple expenses for testing"
+    },
+    {
+      "_id": "req_create_batch_2",
+      "_type": "request",
+      "parentId": "wrk_expense_api",
+      "name": "9b. Batch Create - Taxi",
+      "method": "POST",
+      "url": "{{ _.base_url }}{{ _.api_path }}",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"description\": \"Taxi to work\",\n  \"amount\": 12.00,\n  \"category\": \"Transportation\"\n}"
+      }
+    },
+    {
+      "_id": "req_create_batch_3",
+      "_type": "request",
+      "parentId": "wrk_expense_api",
+      "name": "9c. Batch Create - Lunch",
+      "method": "POST",
+      "url": "{{ _.base_url }}{{ _.api_path }}",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"description\": \"Lunch at restaurant\",\n  \"amount\": 25.75,\n  \"category\": \"Food & Beverage\"\n}"
+      }
+    },
+    {
+      "_id": "req_create_batch_4",
+      "_type": "request",
+      "parentId": "wrk_expense_api",
+      "name": "9d. Batch Create - Movie",
+      "method": "POST",
+      "url": "{{ _.base_url }}{{ _.api_path }}",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"description\": \"Movie tickets\",\n  \"amount\": 18.00,\n  \"category\": \"Entertainment\"\n}"
+      }
+    },
+    {
+      "_id": "req_create_batch_5",
+      "_type": "request",
+      "parentId": "wrk_expense_api",
+      "name": "9e. Batch Create - Groceries",
+      "method": "POST",
+      "url": "{{ _.base_url }}{{ _.api_path }}",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"description\": \"Weekly grocery shopping\",\n  \"amount\": 85.30,\n  \"category\": \"Groceries\"\n}"
+      }
+    }
+  ]
+}
+
