@@ -26,6 +26,8 @@ public class AppConstant {
     // Default Values
     public static final String DEFAULT_USER = "default-user";
 
+    public static final String FRONTEND_URL = "http://localhost:5173";
+
     private AppConstant() {
         // Private constructor to prevent instantiation
     }

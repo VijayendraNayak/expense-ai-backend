@@ -19,6 +19,7 @@ import java.util.Map;
 @RestController
 @Validated
 @RequestMapping(AppConstant.EXPENSE_API)
+@CrossOrigin(AppConstant.FRONTEND_URL)
 public class ExpenseController {
 
     ExpenseService expenseService;
