@@ -1,5 +1,6 @@
 package com.example.expense_ai_backend.service;
 
+import com.example.expense_ai_backend.dto.CategorySummaryDTO;
 import com.example.expense_ai_backend.dto.CreateExpenseRequestDTO;
 import com.example.expense_ai_backend.dto.ExpenseResponseDTO;
 import com.example.expense_ai_backend.dto.UpdateExpenseRequestDTO;
@@ -23,4 +24,6 @@ public interface ExpenseService {
     String deleteExpense(Long id);
 
     long getTotalExpenseCount();
+
+    List<CategorySummaryDTO> getCategorySummary();
 }

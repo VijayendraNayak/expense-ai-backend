@@ -1,6 +1,7 @@
 package com.example.expense_ai_backend.service.Impl;
 
 import com.example.expense_ai_backend.constant.AppConstant;
+import com.example.expense_ai_backend.dto.CategorySummaryDTO;
 import com.example.expense_ai_backend.dto.CreateExpenseRequestDTO;
 import com.example.expense_ai_backend.dto.ExpenseResponseDTO;
 import com.example.expense_ai_backend.dto.UpdateExpenseRequestDTO;
@@ -10,8 +11,11 @@ import com.example.expense_ai_backend.repository.ExpenseRepository;
 import com.example.expense_ai_backend.service.ExpenseService;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -92,6 +96,30 @@ public class ExpenseServiceImpl implements ExpenseService {
     @Override
     public long getTotalExpenseCount() {
         return expenseRepository.count();
+    }
+
+    @Override
+    public List<CategorySummaryDTO> getCategorySummary() {
+        Map<String, List<Expense>> groupedByCategory = expenseRepository.findAll().stream()
+                .collect(Collectors.groupingBy(Expense::getCategory));
+
+        return groupedByCategory.entrySet().stream()
+                .map(entry -> {
+                    String category = entry.getKey();
+                    List<Expense> expenses = entry.getValue();
+
+                    BigDecimal totalAmount = expenses.stream()
+                            .map(Expense::getAmount)
+                            .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+                    long count = expenses.size();
+                    BigDecimal averageAmount = count > 0 ?
+                            totalAmount.divide(BigDecimal.valueOf(count), 2, RoundingMode.HALF_UP) :
+                            BigDecimal.ZERO;
+
+                    return new CategorySummaryDTO(category, totalAmount, count, averageAmount);
+                })
+                .collect(Collectors.toList());
     }
 
     /**

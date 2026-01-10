@@ -8,6 +8,7 @@ public class AppConstant {
     public static final String EXPENSE_BY_USER = "/user/{userId}";
     public static final String EXPENSE_BY_CATEGORY = "/category/{category}";
     public static final String EXPENSE_COUNT = "/count";
+    public static final String EXPENSE_SUMMARY_CATEGORIES = "/summary/categories";
 
     // Response Messages
     public static final String EXPENSE_CREATED = "Expense created successfully with ID: ";

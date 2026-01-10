@@ -1,6 +1,7 @@
 package com.example.expense_ai_backend.controller;
 
 import com.example.expense_ai_backend.constant.AppConstant;
+import com.example.expense_ai_backend.dto.CategorySummaryDTO;
 import com.example.expense_ai_backend.dto.CreateExpenseRequestDTO;
 import com.example.expense_ai_backend.dto.ExpenseResponseDTO;
 import com.example.expense_ai_backend.dto.UpdateExpenseRequestDTO;
@@ -117,5 +118,15 @@ public class ExpenseController {
         long count = expenseService.getTotalExpenseCount();
         Map<String,Long> responseBody = Collections.singletonMap(AppConstant.COUNT_KEY, count);
         return new ResponseEntity<>(responseBody, HttpStatus.OK);
+    }
+
+    /**
+     * Get summary of expenses by category
+     * GET /api/expense/summary/categories
+     */
+    @GetMapping(AppConstant.EXPENSE_SUMMARY_CATEGORIES)
+    public ResponseEntity<List<CategorySummaryDTO>> getCategorySummary(){
+        List<CategorySummaryDTO> summary = expenseService.getCategorySummary();
+        return new ResponseEntity<>(summary, HttpStatus.OK);
     }
 }
